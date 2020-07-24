@@ -1,15 +1,40 @@
-workspace:
-  base: /go
-  path: src/github.com/jmccann/drone-github-comment
+kind: pipeline
+type: docker
+name: test
 
-pipeline:
-  test:
-    image: golang:1.8
+trigger:
+  event:
+    - push
+    - pull_request
+
+steps:
+  - name: test
+    pull: if-not-exists
+    image: golang:1.14
     commands:
-      - go test -cover
+      - go test -v ./...
+      - go build
 
-  build:
-    when:
-      local: false
-    image: plugins/docker:17.05
-    repo: jmccann/drone-github-comment
+---
+kind: pipeline
+type: docker
+name: deploy-prod
+
+trigger:
+  event:
+    - tag
+
+steps:
+  - name: publish
+    pull: if-not-exists
+    image: plugins/gcr
+    settings:
+      registry: eu.gcr.io
+      repo: toolsense/drone-github-comment
+      storage_driver: aufs
+      tags:
+        - latest
+        - ${DRONE_TAG}
+    environment:
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
