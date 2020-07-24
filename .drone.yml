@@ -9,7 +9,7 @@ steps:
 - name: vet
   image: golang:1.14
   commands:
-  - go vet -v ./...
+  - go vet ./...
 
 - name: test
   image: golang:1.14
