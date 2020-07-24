@@ -12,7 +12,7 @@ steps:
     pull: if-not-exists
     image: golang:1.14
     commands:
-      - go test
+      - go test -v ./...
       - go build
 
 ---
