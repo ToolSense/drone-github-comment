@@ -9,12 +9,12 @@ steps:
 - name: vet
   image: golang:1.14
   commands:
-  - go vet ./...
+  - go vet -v ./...
 
 - name: test
   image: golang:1.14
   commands:
-  - go test ./...
+  - go test -v ./...
 
 - name: build  
   image: plugins/docker
