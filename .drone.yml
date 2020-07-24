@@ -7,7 +7,7 @@ trigger:
 
 steps:
 - name: test
-  image: golang:1.14
+  image: golang:1.14-alpine
   commands:
   - go test
 
@@ -15,6 +15,7 @@ steps:
   image: plugins/docker
   settings:
     repo: toolsense/drone-github-comment
+    dry_run: true
 
 ---
 kind: pipeline
