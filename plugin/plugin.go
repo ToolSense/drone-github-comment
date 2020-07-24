@@ -67,7 +67,6 @@ func NewFromPlugin(p Plugin) (*Plugin, error) {
 
 // Exec executes the plugin
 func (p Plugin) Exec() error {
-	fmt.Println("exec1")
 	if p.gitClient == nil {
 		return fmt.Errorf("Exec(): git client not initialized")
 	}
@@ -78,7 +77,6 @@ func (p Plugin) Exec() error {
 
 	var err error
 	if p.Update {
-		fmt.Println("update")
 		// Append plugin comment ID to comment message so we can search for it later
 		message := fmt.Sprintf("%s\n<!-- id: %s -->\n", p.Message, p.Key)
 		ic.Body = &message
@@ -96,7 +94,6 @@ func (p Plugin) Exec() error {
 	}
 
 	if p.DeleteCreate {
-		fmt.Println("delete")
 		// Append plugin comment ID to comment message so we can search for it later
 		message := fmt.Sprintf("%s\n<!-- id: %s -->\n", p.Message, p.Key)
 		ic.Body = &message
@@ -117,7 +114,6 @@ func (p Plugin) Exec() error {
 		return err
 	}
 
-	fmt.Println("create")
 	_, _, err = p.gitClient.Issues.CreateComment(p.gitContext, p.RepoOwner, p.RepoName, p.IssueNum, ic)
 	return err
 }
@@ -225,7 +221,11 @@ func filterComment(comments []*github.IssueComment, key string) *github.IssueCom
 
 func (p Plugin) validate() error {
 	if p.Token == "" && (p.Username == "" || p.Password == "") {
-		return fmt.Errorf("You must provide an API key or Username and Password")
+		return fmt.Errorf("you must provide an API key or Username and Password")
+	}
+
+	if p.Update && p.DeleteCreate {
+		return fmt.Errorf("please use only one of flags: update, delete_create")
 	}
 
 	return nil
