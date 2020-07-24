@@ -1,40 +1,40 @@
 kind: pipeline
-type: docker
 name: test
 
 trigger:
   event:
-    - push
-    - pull_request
+  - push
 
 steps:
-  - name: test
-    pull: if-not-exists
-    image: golang:1.14
-    commands:
-      - go test -v ./...
-      - go build
+- name: test
+  image: golang:1.14
+  commands:
+  - go test
+
+- name: build  
+  image: plugins/docker
+  settings:
+    repo: toolsense/drone-github-comment
+    dry_run: true
 
 ---
 kind: pipeline
-type: docker
-name: deploy-prod
+name: publish
 
 trigger:
   event:
-    - tag
+  - tag
 
 steps:
-  - name: publish
-    pull: if-not-exists
-    image: plugins/gcr
-    settings:
-      registry: eu.gcr.io
-      repo: toolsense/drone-github-comment
-      storage_driver: aufs
-      tags:
-        - latest
-        - ${DRONE_TAG}
-    environment:
-      GOOGLE_CREDENTIALS:
-        from_secret: google_credentials
+- name: publish
+  image: plugins/gcr
+  settings:
+    registry: eu.gcr.io
+    repo: toolsense/drone-github-comment
+    storage_driver: aufs
+    tags:
+     - latest
+     - ${DRONE_TAG}
+  environment:
+    GOOGLE_CREDENTIALS:
+      from_secret: google_credentials
