@@ -1,3 +1,20 @@
+kind: pipeline
+type: docker
+name: test
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+steps:
+  - name: test
+    pull: if-not-exists
+    image: golang:1.14
+    commands:
+      - go test
+      - go build
+
 ---
 kind: pipeline
 type: docker

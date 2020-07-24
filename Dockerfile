@@ -15,13 +15,6 @@ WORKDIR /go/src/github.com/jmccann/drone-github-comment
 # copy sources
 COPY . .
 
-RUN go get -d -v ./...
-
-RUN go install -v ./...
-
-# run tests
-RUN go test -v ./...
-
 # build binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o "/drone-github-comment"
 
