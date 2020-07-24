@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-    "github.com/ToolSense/drone-github-comment/plugin"
+	"github.com/ToolSense/drone-github-comment/plugin"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
