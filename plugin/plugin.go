@@ -225,7 +225,11 @@ func filterComment(comments []*github.IssueComment, key string) *github.IssueCom
 
 func (p Plugin) validate() error {
 	if p.Token == "" && (p.Username == "" || p.Password == "") {
-		return fmt.Errorf("You must provide an API key or Username and Password")
+		return fmt.Errorf("you must provide an API key or Username and Password")
+	}
+
+	if p.Update && p.DeleteCreate {
+		return fmt.Errorf("please use only one of flags: update, delete_create")
 	}
 
 	return nil
